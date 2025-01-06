@@ -25,11 +25,11 @@ def extract_info(url: str, html_content: str) -> dict:
 with open("dataset2.json", "r") as file:
     data = json.load(file)
 
-medium_entries = [item for item in data if urlparse(item["url"]).netloc == "decrypt.co"]
+entries = [item for item in data if urlparse(item["url"]).netloc == "decrypt.co"]
 
 results = []
 
-for entry in medium_entries:
+for entry in entries:
     html_content = entry.get("html", "")
     url_content = entry.get("url", "")
     
