@@ -5,7 +5,7 @@ from datetime import datetime
 import re
 def extract_info(url: str, html_content: str) -> dict:
     """"
-    A snippet to extract author, publish date, and update date from a blockchaingamer.biz article.
+    A snippet to extract author, publish date, and update date from a venturebeat.com article.
     """
     soup = BeautifulSoup(html_content, "html.parser")
     site_name  = soup.find(name='meta', attrs={'property': 'og:site_name'}).get('content')
@@ -25,7 +25,7 @@ def extract_info(url: str, html_content: str) -> dict:
 with open("dataset2.json", "r") as file:
     data = json.load(file)
 
-entries = [item for item in data if urlparse(item["url"]).netloc == "www.blockchaingamer.biz"]
+entries = [item for item in data if urlparse(item["url"]).netloc == "venturebeat.com"]
 
 results = []
 
