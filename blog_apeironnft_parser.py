@@ -26,44 +26,44 @@ def extract_info(url: str, html_content: str) -> dict:
             publisher = json_info.get('publisher', {})
             metadata = {
                 'url': url,
-                'publish_date': json_info.get('datePublished'),
-                'update_date': json_info.get('dateModified'),
+                'published': json_info.get('datePublished'),
+                'updated': json_info.get('dateModified'),
                 'author': author_name,
-                'site_name': publisher.get('name') if publisher else None,
+                'site': publisher.get('name') if publisher else None,
             }
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON in URL: {url} - {e}")
             metadata = {
                 'url': url,
-                'publish_date': None,
-                'update_date': None,
+                'published': None,
+                'updated': None,
                 'author': None,
-                'site_name': None,
+                'site': None,
             }
     else:
         print(f"No <script> tag found for URL: {url}")
         metadata = {
             'url': url,
-            'publish_date': None,
-            'update_date': None,
+            'published': None,
+            'updated': None,
             'author': None,
-            'site_name': None,
+            'site': None,
         }
 
     return metadata
 
-with open("dataset2.json", "r") as file:
-    data = json.load(file)
+# with open("dataset2.json", "r") as file:
+#     data = json.load(file)
 
-entries = [item for item in data if urlparse(item["url"]).netloc == "blog.apeironnft.com"]
+# entries = [item for item in data if urlparse(item["url"]).netloc == "blog.apeironnft.com"]
 
-results = []
+# results = []
 
-for entry in entries:
-    html_content = entry.get("html", "")
-    url_content = entry.get("url", "")
+# for entry in entries:
+#     html_content = entry.get("html", "")
+#     url_content = entry.get("url", "")
     
-    extracted = extract_info(url_content, html_content)
-    results.append(extracted)
+#     extracted = extract_info(url_content, html_content)
+#     results.append(extracted)
 
-print(json.dumps(results, indent=4))
+# print(json.dumps(results, indent=4))

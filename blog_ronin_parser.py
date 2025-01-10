@@ -15,44 +15,44 @@ def extract_info(url: str, html_content: str) -> dict:
         try:
             json_info = json.loads(info_script.getText())
             metadata ={'url': url,
-               'publish_date' : json_info['datePublished'], 
-               'update_date' : json_info['dateModified'], 
+               'published' : json_info['datePublished'], 
+               'updated' : json_info['dateModified'], 
                'author' : author_name,
-               'site_name': site_name}
+               'site': site_name}
             
         except json.JSONDecodeError as e:
             metadata = {
                 'url': url,
-                'publish_date': None,
-                'update_date': None,
+                'published': None,
+                'updated': None,
                 'author': None,
-                'site_name': site_name
+                'site': site_name
             }
     else:
         metadata = {
             'url': url,
-            'publish_date': None,
-            'update_date': None,
+            'published': None,
+            'updated': None,
             'author': None,
-            'site_name': site_name
+            'site': site_name
         }
     
     
     return metadata
-with open("dataset2.json", "r") as file:
-    data = json.load(file)
+# with open("dataset2.json", "r") as file:
+#     data = json.load(file)
 
-entries = [item for item in data if urlparse(item["url"]).netloc == "blog.roninchain.com"] 
+# entries = [item for item in data if urlparse(item["url"]).netloc == "blog.roninchain.com"] 
 
-results = []
+# results = []
 
-for entry in entries:
-    html_content = entry.get("html", "")
-    url_content = entry.get("url", "")
+# for entry in entries:
+#     html_content = entry.get("html", "")
+#     url_content = entry.get("url", "")
     
-    extracted = extract_info(url_content,html_content)
+#     extracted = extract_info(url_content,html_content)
        
     
-    results.append(extracted)
+#     results.append(extracted)
 
-print(json.dumps(results, indent=4))
+# print(json.dumps(results, indent=4))

@@ -23,10 +23,10 @@ def extract_info(url: str, html_content: str) -> dict:
 
     metadata = {
             'url': url,
-            'publish_date': published['datetime'],
-            'update_date': updated['datetime'],
+            'published': published['datetime'],
+            'updated': updated['datetime'],
             'author': author_name,
-            'site_name': site_name
+            'site': site_name
         } 
     
     

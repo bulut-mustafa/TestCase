@@ -6,7 +6,7 @@ from datetime import datetime
 def returnUpdatedAt(html_content):
     nbka = html_content.find('updatedAt')
     if(nbka == -1):
-        return "No updated date available."
+        return None
     a = html_content.find(",", nbka + 11)
     b = html_content[nbka + 11:a]
     updated_date = datetime.utcfromtimestamp(int(b) / 1000)
@@ -23,24 +23,25 @@ def extract_info(url: str, html_content: str) -> dict:
     if '400' in soup.title.string:
         result = {
             "url": url,
-            "author": "404 Not Found",
-            "published": "404 Not Found",
-            "latestUpdate": "404 Not Found"
+            "author": None,
+            "published": None,
+            "updated": None,
+            "site" : None
         }
     else:
         site_name = soup.find(name='meta', attrs={'property': 'og:site_name'}).get('content')
         author = soup.find(name='meta', attrs={'name': 'author'})
         published = soup.find(name='meta', attrs={'property': 'article:published_time'})
         
-        author_content = author.get('content') if author else "Author not found"
-        published_content = published.get('content') if published else "Published date not found"
+        author_content = author.get('content') if author else None
+        published_content = published.get('content') if published else None
         
         result = {
             "url": url,
             "author": author_content,
             "published": published_content,
-            "latestUpdate": lastUpdate,
-            'siteName': site_name
+            "updated": lastUpdate,
+            'site': site_name
         }
     
     return result

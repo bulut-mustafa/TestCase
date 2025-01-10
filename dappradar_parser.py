@@ -19,28 +19,28 @@ def extract_info(url: str, html_content: str) -> dict:
             
             metadata = {
                 'url': url,
-                'publish_date': json_info.get('datePublished'),
-                'update_date': json_info.get('dateModified'),
+                'published': json_info.get('datePublished'),
+                'updated': json_info.get('dateModified'),
                 'author': json_info.get('author'),
-                'site_name': site_name,
+                'site': site_name,
             }
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON in URL: {url} - {e}")
             metadata = {
                 'url': url,
-                'publish_date': None,
-                'update_date': None,
+                'published': None,
+                'updated': None,
                 'author': None,
-                'site_name': None,
+                'site': None,
             }
     else:
         print(f"No <script> tag found for URL: {url}")
         metadata = {
             'url': url,
-            'publish_date': None,
-            'update_date': None,
+            'published': None,
+            'updated': None,
             'author': None,
-            'site_name': None,
+            'site': None,
         }
     
     return metadata

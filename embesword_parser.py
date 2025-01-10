@@ -13,26 +13,26 @@ def extract_info(url: str, html_content: str) -> dict:
         try:
             json_info = json.loads(info_script.getText())
             metadata ={'url': url,
-               'publish_date' : json_info['datePublished'], 
-               'update_date' : json_info['dateModified'], 
+               'published' : json_info['datePublished'], 
+               'updated' : json_info['dateModified'], 
                'author' : json_info['author']['name'],
-               'site_name': site_name}
+               'site': site_name}
             
         except json.JSONDecodeError as e:
             metadata = {
                 'url': url,
-                'publish_date': None,
-                'update_date': None,
+                'published': None,
+                'updated': None,
                 'author': None,
-                'site_name': site_name
+                'site': site_name
             }
     else:
         metadata = {
             'url': url,
-            'publish_date': None,
-            'update_date': None,
+            'published': None,
+            'updated': None,
             'author': None,
-            'site_name': site_name
+            'site': site_name
         }
     
     

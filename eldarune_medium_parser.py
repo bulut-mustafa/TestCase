@@ -23,17 +23,17 @@ def extract_info(url: str, html_content: str) -> dict:
     if '400' in soup.title.string:
         result = {
             "url": url,
-            "author": "404 Not Found",
-            "published": "404 Not Found",
-            "latestUpdate": "404 Not Found"
+            "author": None,
+            "published": None,
+            "latestUpdate": None
         }
     else:
         site_name = soup.find(name='meta', attrs={'property': 'og:site_name'}).get('content')
         author = soup.find(name='meta', attrs={'name': 'author'})
         published = soup.find(name='meta', attrs={'property': 'article:published_time'})
         
-        author_content = author.get('content') if author else "Author not found"
-        published_content = published.get('content') if published else "Published date not found"
+        author_content = author.get('content') if author else None
+        published_content = published.get('content') if published else None
         
         result = {
             "url": url,

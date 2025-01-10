@@ -11,15 +11,15 @@ def extract_info(url: str, html_content: str) -> dict:
     site_name = site_name_tag.get('content') if site_name_tag else None
     info_script = soup.find('script', type='application/ld+json')
     if not info_script:
-        return {'author': "Author not found", 'published': "Published date not found", 'latestUpdate': "Updated date not found"}
+        return {'url':url, 'author':  None, 'published': None, 'latestUpdate': None, 'site_name': site_name}
     
     json_info = json.loads(info_script.getText())
     
     metadata ={'url': url,
-               'publish_date' : json_info['datePublished'] if 'datePublished' in json_info else None, 
-               'update_date' : json_info['dateModified']    if 'dateModified' in json_info else None, 
+               'published' : json_info['datePublished'] if 'datePublished' in json_info else None, 
+               'updated' : json_info['dateModified']    if 'dateModified' in json_info else None, 
                'author' : json_info['author']['name'] if 'author' in json_info else None,
-               'site_name': site_name}
+               'site': site_name}
     
     
     return metadata

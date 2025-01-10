@@ -15,10 +15,10 @@ def extract_info(url: str, html_content: str) -> dict:
     json_info = json.loads(info_script.getText())
     
     metadata ={'url': url,
-               'publish_date' : json_info['datePublished'], 
-               'update_date' : json_info['dateModified'], 
+               'published' : json_info['datePublished'], 
+               'updated' : json_info['dateModified'], 
                'author' : json_info['author']['name'],
-               'site_name': site_name}
+               'site': site_name}
     
     
     return metadata

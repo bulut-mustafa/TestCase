@@ -30,8 +30,8 @@ def extract_info(url: str, html_content: str) -> dict:
         "url": url,
         "author": author,
         "published": publish_date,
-        "latestUpdate": None,
-        'siteName': site_name
+        "updated": None,
+        'site': site_name
     }
     return result
 # with open("dataset2.json", "r") as file:

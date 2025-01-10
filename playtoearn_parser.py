@@ -11,19 +11,19 @@ def extract_info(url: str, html_content: str) -> dict:
     soup = BeautifulSoup(html_content, "html.parser")
     site_name  = soup.find(name='meta', attrs={'property': 'og:site_name'}).get('content')
     author_tag = soup.find('div', class_='__CreatorName')
-    author = author_tag.getText() if author_tag else "Author not found"
+    author = author_tag.getText() if author_tag else None
         
     disclaimer_divs = soup.find_all("div", class_="NewsContentDisclaimer")
-    posted_date = "Not found"
-    updated_date = "Not found"
+    posted_date = None
+    updated_date = None
 
     for div in disclaimer_divs:
         if "Posted:" in div.text and "Updated:" in div.text:
             text = div.text
             posted_match = re.search(r"Posted: ([\d]{2} [A-Za-z]{3}, [\d]{4} [\d]{2}:[\d]{2})", text)
             updated_match = re.search(r"Updated: ([\d]{2} [A-Za-z]{3}, [\d]{4} [\d]{2}:[\d]{2})", text)
-            posted_date = posted_match.group(1) if posted_match else "Not found"
-            updated_date = updated_match.group(1) if updated_match else "Not found"
+            posted_date = posted_match.group(1) if posted_match else None
+            updated_date = updated_match.group(1) if updated_match else None
             break
             
             
@@ -31,8 +31,8 @@ def extract_info(url: str, html_content: str) -> dict:
         "url": url,
         "author": author,
         "published": posted_date,
-        "latestUpdate": updated_date,
-        'siteName': site_name
+        "updated": updated_date,
+        'site': site_name
     }
     return result
 # with open("dataset2.json", "r") as file:

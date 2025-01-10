@@ -52,26 +52,48 @@ for entry in entries:
     function_to_use = operations.get(domain)
     
     if not function_to_use:
-        
+        best_parser = None
+        best_result = {
+            "url": url_content,
+            "author": None,
+            "published": None,
+            "latestUpdate": None,
+        }
+
         for parser in fallback_parsers:
             try:
+                # Attempt to extract data using the current parser
                 extracted = parser(url_content, html_content)
-                
-                if extracted.get("author") or extracted.get("published"):
-                    function_to_use = parser
-                    break
+
+                # Count the number of non-None fields in the result
+                completeness_score = sum(
+                    1 for key in ["author", "published", "latestUpdate"] if extracted.get(key)
+                )
+
+                # Update the best parser and result if this one is better
+                if completeness_score > sum(
+                    1 for key in ["author", "published", "latestUpdate"] if best_result.get(key)
+                ):
+                    best_parser = parser
+                    best_result = extracted
             except Exception as e:
                 # Log the error and move to the next parser
                 print(f"Error using parser {parser.__name__} for {url_content}: {e}")
                 continue
+
+        # Use the best parser or fallback to a default result
+            function_to_use = best_parser
+            extracted = best_result
+    else:
+            # Use the originally identified parser
+        extracted = function_to_use(url_content, html_content) if function_to_use else {
+            "url": url_content,
+            "author": None,
+            "published": None,
+            "latestUpdate": None,
+        }
             
             
-    extracted = function_to_use(url_content,html_content) if function_to_use else {
-        "url": url_content,
-        "author": None,
-        "published": None,
-        "latestUpdate": None
-    }
         
     
     results.append(extracted)
