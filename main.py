@@ -82,7 +82,7 @@ for entry in entries:
                 print(f"Error using parser {parser.__name__} for {url_content}: {e}")
                 continue
 
-        # After evaluating all fallback parsers, finalize the best result
+        
         function_to_use = best_parser
         extracted = best_result
     else:
@@ -102,6 +102,6 @@ for entry in entries:
 
 new_dataset = json.dumps(results, indent=4)
 
-# Write the <head> content to a new file
+
 with open("dataset3.json", "w") as output_file:
     output_file.write(new_dataset)
