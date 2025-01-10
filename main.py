@@ -48,54 +48,56 @@ results = []
 for entry in entries:
     html_content = entry.get("html", "")
     url_content = entry.get("url", "")
-    domain = urlparse(entry["url"]).netloc 
+    domain = urlparse(entry["url"]).netloc
     function_to_use = operations.get(domain)
-    
+
     if not function_to_use:
         best_parser = None
         best_result = {
             "url": url_content,
             "author": None,
             "published": None,
-            "latestUpdate": None,
+            "updated": None,
+            "site": None
         }
 
         for parser in fallback_parsers:
             try:
-                # Attempt to extract data using the current parser
+                
                 extracted = parser(url_content, html_content)
 
-                # Count the number of non-None fields in the result
+                
                 completeness_score = sum(
-                    1 for key in ["author", "published", "latestUpdate"] if extracted.get(key)
+                    1 for key in ["author", "published", "updated", "site"] if extracted.get(key)
                 )
 
-                # Update the best parser and result if this one is better
+                
                 if completeness_score > sum(
-                    1 for key in ["author", "published", "latestUpdate"] if best_result.get(key)
+                    1 for key in ["author", "published", "updated", "site"] if best_result.get(key)
                 ):
                     best_parser = parser
                     best_result = extracted
             except Exception as e:
-                # Log the error and move to the next parser
+                
                 print(f"Error using parser {parser.__name__} for {url_content}: {e}")
                 continue
 
-        # Use the best parser or fallback to a default result
-            function_to_use = best_parser
-            extracted = best_result
+        # After evaluating all fallback parsers, finalize the best result
+        function_to_use = best_parser
+        extracted = best_result
     else:
-            # Use the originally identified parser
-        extracted = function_to_use(url_content, html_content) if function_to_use else {
-            "url": url_content,
-            "author": None,
-            "published": None,
-            "latestUpdate": None,
-        }
-            
-            
-        
-    
+        try:
+            extracted = function_to_use(url_content, html_content)
+        except Exception as e:
+            print(f"Error using function_to_use {function_to_use.__name__} for {url_content}: {e}")
+            extracted = {
+                "url": url_content,
+                "author": None,
+                "published": None,
+                "updated": None,
+                "site": None
+            }
+
     results.append(extracted)
 
 new_dataset = json.dumps(results, indent=4)
