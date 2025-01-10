@@ -9,7 +9,7 @@ def extract_info(url: str, html_content: str) -> dict:
     """
     
     soup = BeautifulSoup(html_content, "html.parser")
-    site_name  = soup.find(name='meta', attrs={'name': 'application-name'}).get('content')
+    site_name  = soup.find(name='meta', attrs={'property': 'og:site_name'}).get('content')
     author_tag = soup.find('div', class_='__CreatorName')
     author = author_tag.getText() if author_tag else "Author not found"
         
@@ -28,27 +28,27 @@ def extract_info(url: str, html_content: str) -> dict:
             
             
     result = {
-        "url": url_content,
+        "url": url,
         "author": author,
         "published": posted_date,
         "latestUpdate": updated_date,
         'siteName': site_name
     }
     return result
-with open("dataset2.json", "r") as file:
-    data = json.load(file)
+# with open("dataset2.json", "r") as file:
+#     data = json.load(file)
 
-entries = [item for item in data if urlparse(item["url"]).netloc == "playtoearn.com"]
+# entries = [item for item in data if urlparse(item["url"]).netloc == "playtoearn.com"]
 
-results = []
+# results = []
 
-for entry in entries:
-    html_content = entry.get("html", "")
-    url_content = entry.get("url", "")
+# for entry in entries:
+#     html_content = entry.get("html", "")
+#     url_content = entry.get("url", "")
     
-    extracted = extract_info(url_content,html_content)
+#     extracted = extract_info(url_content,html_content)
         
     
-    results.append(extracted)
+#     results.append(extracted)
 
-print(json.dumps(results, indent=4))
+# print(json.dumps(results, indent=4))

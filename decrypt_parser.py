@@ -7,7 +7,8 @@ def extract_info(url: str, html_content: str) -> dict:
     """
     
     soup = BeautifulSoup(html_content, "html.parser")
-    site_name = soup.find(name='meta', attrs={'property': 'og:site_name'}).get('content')
+    site_name_tag = soup.find(name='meta', attrs={'property': 'og:site_name'})
+    site_name = site_name_tag.get('content') if site_name_tag else None
     info_script = soup.find('script', type='application/ld+json')
     if not info_script:
         return {'author': "Author not found", 'published': "Published date not found", 'latestUpdate': "Updated date not found"}
@@ -15,27 +16,27 @@ def extract_info(url: str, html_content: str) -> dict:
     json_info = json.loads(info_script.getText())
     
     metadata ={'url': url,
-               'publish_date' : json_info['datePublished'], 
-               'update_date' : json_info['dateModified'], 
-               'author' : json_info['author']['name'],
+               'publish_date' : json_info['datePublished'] if 'datePublished' in json_info else None, 
+               'update_date' : json_info['dateModified']    if 'dateModified' in json_info else None, 
+               'author' : json_info['author']['name'] if 'author' in json_info else None,
                'site_name': site_name}
     
     
     return metadata
-with open("dataset2.json", "r") as file:
-    data = json.load(file)
+# with open("dataset2.json", "r") as file:
+#     data = json.load(file)
 
-entries = [item for item in data if urlparse(item["url"]).netloc == "decrypt.co"]
+# entries = [item for item in data if urlparse(item["url"]).netloc == "decrypt.co"]
 
-results = []
+# results = []
 
-for entry in entries:
-    html_content = entry.get("html", "")
-    url_content = entry.get("url", "")
+# for entry in entries:
+#     html_content = entry.get("html", "")
+#     url_content = entry.get("url", "")
     
-    extracted = extract_info(url_content,html_content)
+#     extracted = extract_info(url_content,html_content)
        
     
-    results.append(extracted)
+#     results.append(extracted)
 
-print(json.dumps(results, indent=4))
+# print(json.dumps(results, indent=4))

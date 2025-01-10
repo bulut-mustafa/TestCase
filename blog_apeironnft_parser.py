@@ -13,14 +13,22 @@ def extract_info(url: str, html_content: str) -> dict:
         try:
             json_info = json.loads(info_script.get_text(strip=True))
             
-            author = json_info.get('author', [{}])[0]  # Safely get the first author if available
-            publisher = json_info.get('publisher', {})
+            # Handle `author` field that can be a dict or list
+            author_data = json_info.get('author')
+            if isinstance(author_data, list):  # If it's a list, use the first element
+                author_name = author_data[0].get('name') if author_data else None
+            elif isinstance(author_data, dict):  # If it's a dict, get the `name` directly
+                author_name = author_data.get('name')
+            else:  # Fallback in case `author` is not in the expected structure
+                author_name = None
             
+            # Extract other metadata
+            publisher = json_info.get('publisher', {})
             metadata = {
                 'url': url,
                 'publish_date': json_info.get('datePublished'),
                 'update_date': json_info.get('dateModified'),
-                'author': author.get('name') if author else None,
+                'author': author_name,
                 'site_name': publisher.get('name') if publisher else None,
             }
         except json.JSONDecodeError as e:
@@ -41,7 +49,7 @@ def extract_info(url: str, html_content: str) -> dict:
             'author': None,
             'site_name': None,
         }
-    
+
     return metadata
 
 with open("dataset2.json", "r") as file:

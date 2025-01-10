@@ -10,7 +10,7 @@ def extract_info(url: str, html_content: str) -> dict:
     site_name = soup.find(name='meta', attrs={'property': 'og:site_name'}).get('content')
     info_script = soup.find('script', type='application/ld+json')
     if not info_script:
-        return {'author': "Author not found", 'published': "Published date not found", 'latestUpdate': "Updated date not found"}
+        return {'author': None, 'published': None, 'latestUpdate': None}
     
     json_info = json.loads(info_script.getText())
     
@@ -22,20 +22,20 @@ def extract_info(url: str, html_content: str) -> dict:
     
     
     return metadata
-with open("dataset2.json", "r") as file:
-    data = json.load(file)
+# with open("dataset2.json", "r") as file:
+#     data = json.load(file)
 
-entries = [item for item in data if urlparse(item["url"]).netloc == "chainplay.gg" and "/blog" in urlparse(item["url"]).path] 
+# entries = [item for item in data if urlparse(item["url"]).netloc == "chainplay.gg" and "/blog" in urlparse(item["url"]).path] 
 
-results = []
+# results = []
 
-for entry in entries:
-    html_content = entry.get("html", "")
-    url_content = entry.get("url", "")
+# for entry in entries:
+#     html_content = entry.get("html", "")
+#     url_content = entry.get("url", "")
     
-    extracted = extract_info(url_content,html_content)
+#     extracted = extract_info(url_content,html_content)
        
     
-    results.append(extracted)
+#     results.append(extracted)
 
-print(json.dumps(results, indent=4))
+# print(json.dumps(results, indent=4))

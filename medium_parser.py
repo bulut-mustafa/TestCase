@@ -22,7 +22,7 @@ def extract_info(url: str, html_content: str) -> dict:
     
     if '400' in soup.title.string:
         result = {
-            "url": url_content,
+            "url": url,
             "author": "404 Not Found",
             "published": "404 Not Found",
             "latestUpdate": "404 Not Found"
@@ -36,7 +36,7 @@ def extract_info(url: str, html_content: str) -> dict:
         published_content = published.get('content') if published else "Published date not found"
         
         result = {
-            "url": url_content,
+            "url": url,
             "author": author_content,
             "published": published_content,
             "latestUpdate": lastUpdate,
@@ -44,21 +44,21 @@ def extract_info(url: str, html_content: str) -> dict:
         }
     
     return result
-with open("dataset2.json", "r") as file:
-    data = json.load(file)
+# with open("dataset2.json", "r") as file:
+#     data = json.load(file)
 
-entries = [item for item in data if urlparse(item["url"]).netloc == "medium.com"]
+# entries = [item for item in data if urlparse(item["url"]).netloc == "medium.com"]
 
-results = []
+# results = []
 
-for entry in entries:
-    html_content = entry.get("html", "")
-    url_content = entry.get("url", "")
+# for entry in entries:
+#     html_content = entry.get("html", "")
+#     url_content = entry.get("url", "")
     
     
-    extracted = extract_info(url_content,html_content)
+#     extracted = extract_info(url_content,html_content)
         
     
-    results.append(extracted)
+#     results.append(extracted)
 
-print(json.dumps(results, indent=4))
+# print(json.dumps(results, indent=4))

@@ -15,27 +15,27 @@ def extract_info(url: str, html_content: str) -> dict:
 
        
     result = {
-        "url": url_content,
+        "url": url,
         "author": author,
         "published": published_date,
         "latestUpdate": updated_date,
         'siteName': site_name
     }
     return result
-with open("dataset2.json", "r") as file:
-    data = json.load(file)
+# with open("dataset2.json", "r") as file:
+#     data = json.load(file)
 
-entries = [item for item in data if urlparse(item["url"]).netloc == "nftplazas.com"]
+# entries = [item for item in data if urlparse(item["url"]).netloc == "nftplazas.com"]
 
-results = []
+# results = []
 
-for entry in entries:
-    html_content = entry.get("html", "")
-    url_content = entry.get("url", "")
+# for entry in entries:
+#     html_content = entry.get("html", "")
+#     url_content = entry.get("url", "")
     
-    extracted = extract_info(url_content,html_content)
+#     extracted = extract_info(url_content,html_content)
         
     
-    results.append(extracted)
+#     results.append(extracted)
 
-print(json.dumps(results, indent=4))
+# print(json.dumps(results, indent=4))
