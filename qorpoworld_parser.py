@@ -2,6 +2,7 @@ import json
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from datetime import datetime
+from dateutil.parser import parse
 import re
 def extract_info(url: str, html_content: str) -> dict:
     """"
@@ -18,12 +19,14 @@ def extract_info(url: str, html_content: str) -> dict:
     
     
     publish_tag = soup.find('p', class_='article-time')
+    publish_date = None
+
     if publish_tag:
-        publish_text = publish_tag.getText()
-        
-        publish_date = re.sub(r", \d+\s?mins?", "", publish_text)
-    else:
-        publish_date = None
+        publish_text = re.sub(r", \d+\s?mins?", "", publish_tag.get_text(strip=True))
+        try:
+            publish_date = parse(publish_text).isoformat()
+        except (ValueError, TypeError):
+            publish_date = None
     
             
     result = {

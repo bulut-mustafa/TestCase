@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from datetime import datetime
 import re
+from dateutil.parser import parse
 def extract_info(url: str, html_content: str) -> dict:
     """"
     A snippet to extract author, publish date, and update date from a PlayToEarn.com article.
@@ -22,8 +23,16 @@ def extract_info(url: str, html_content: str) -> dict:
             text = div.text
             posted_match = re.search(r"Posted: ([\d]{2} [A-Za-z]{3}, [\d]{4} [\d]{2}:[\d]{2})", text)
             updated_match = re.search(r"Updated: ([\d]{2} [A-Za-z]{3}, [\d]{4} [\d]{2}:[\d]{2})", text)
-            posted_date = posted_match.group(1) if posted_match else None
-            updated_date = updated_match.group(1) if updated_match else None
+            if posted_match:
+                try:
+                    posted_date = parse(posted_match.group(1)).isoformat()
+                except (ValueError, TypeError):
+                    posted_date = None
+            if updated_match:
+                try:
+                    updated_date = parse(updated_match.group(1)).isoformat()
+                except (ValueError, TypeError):
+                    updated_date = None
             break
             
             

@@ -2,6 +2,7 @@ import json
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from datetime import datetime
+from dateutil.parser import parse
 import re
 def extract_info(url: str, html_content: str) -> dict:
     """"
@@ -12,13 +13,14 @@ def extract_info(url: str, html_content: str) -> dict:
     author = soup.find(name='meta', attrs={'name': 'author'}).get('content')
     published_date = soup.find(name='meta', attrs={'property': 'article:published_time'}).get('content')
     updated_date = soup.find(name='meta', attrs={'property': 'article:modified_time'}).get('content')
-
+    parsed__published_date = parse(published_date).isoformat() if published_date else None
+    parsed_updated_date = parse(updated_date).isoformat() if updated_date else None
        
     result = {
         "url": url,
         "author": author,
-        "published": published_date,
-        "updated": updated_date,
+        "published": parsed__published_date,
+        "updated": parsed_updated_date,
         'site': site_name
     }
     return result
@@ -38,3 +40,4 @@ def extract_info(url: str, html_content: str) -> dict:
     
 #     results.append(extracted)
 
+# print(json.dumps(results, indent=4))

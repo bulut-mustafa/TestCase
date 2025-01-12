@@ -2,15 +2,19 @@ import json
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from datetime import datetime
-
+from dateutil.parser import parse
 def returnUpdatedAt(html_content):
+    """Extract and parse the `updatedAt` timestamp from the raw HTML."""
     nbka = html_content.find('updatedAt')
-    if(nbka == -1):
+    if nbka == -1:
         return None
     a = html_content.find(",", nbka + 11)
     b = html_content[nbka + 11:a]
-    updated_date = datetime.utcfromtimestamp(int(b) / 1000)
-    return updated_date.strftime('%Y-%m-%d %H:%M:%S UTC')
+    try:
+        updated_date = datetime.utcfromtimestamp(int(b) / 1000)
+        return updated_date
+    except (ValueError, TypeError):
+        return None
 
 def extract_info(url: str, html_content: str) -> dict:
     """"
@@ -36,11 +40,21 @@ def extract_info(url: str, html_content: str) -> dict:
         author_content = author.get('content') if author else None
         published_content = published.get('content') if published else None
         
+        parsed_published = None
+        if published_content:
+            try:
+                parsed_published = parse(published_content)
+            except (ValueError, TypeError):
+                pass
+
+        
+        formatted_lastUpdate = lastUpdate.isoformat() if lastUpdate else None
+        
         result = {
             "url": url,
             "author": author_content,
-            "published": published_content,
-            "updated": lastUpdate,
+            "published": parsed_published.isoformat() if parsed_published else None,
+            "updated": formatted_lastUpdate,
             'site': site_name
         }
     

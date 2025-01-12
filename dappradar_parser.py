@@ -1,7 +1,7 @@
 import json
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-
+from dateutil.parser import parse
 def extract_info(url: str, html_content: str) -> dict:
     """
     A snippet to extract author, publish date, and update date from a dappradar.com article.
@@ -19,8 +19,8 @@ def extract_info(url: str, html_content: str) -> dict:
             
             metadata = {
                 'url': url,
-                'published': json_info.get('datePublished'),
-                'updated': json_info.get('dateModified'),
+                'published': parse(json_info.get('datePublished')).isoformat() if json_info.get('datePublished') else None,
+                'updated': parse(json_info.get('dateModified')).isoformat() if json_info.get('dateModified') else None,
                 'author': json_info.get('author'),
                 'site': site_name,
             }
